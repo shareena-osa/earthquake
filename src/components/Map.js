@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapContainer, TileLayer, CircleMarker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, CircleMarker, Popup, ZoomControl } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { format } from 'date-fns';
 import L from 'leaflet';
@@ -27,7 +27,14 @@ const Map = ({ earthquakes }) => {
   };
 
   return (
-    <MapContainer center={[20, 0]} zoom={2} style={{ height: '100%', width: '100%' }}>
+    <MapContainer 
+      center={[20, 0]} 
+      zoom={2} 
+      style={{ height: '100%', width: '100%' }}
+      className="z-0"
+      zoomControl={false}
+    >
+      <ZoomControl position="bottomright" />
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -43,18 +50,23 @@ const Map = ({ earthquakes }) => {
           }}
           radius={getMarkerRadius(earthquake.properties.mag)}
         >
-          <Popup>
-            <strong>{earthquake.properties.place}</strong>
-            <br />
-            Magnitude: {earthquake.properties.mag}
-            <br />
-            Time: {format(new Date(earthquake.properties.time), 'yyyy-MM-dd HH:mm:ss')}
-            <br />
-            Depth: {earthquake.geometry.coordinates[2]} km
-            <br />
-            <a href={earthquake.properties.url} target="_blank" rel="noopener noreferrer">
-              More Info
-            </a>
+          <Popup className="text-sm">
+            <div className="min-w-[200px]">
+              <strong className="block mb-2 text-base">{earthquake.properties.place}</strong>
+              <div className="space-y-1 text-sm">
+                <p><span className="font-semibold">Magnitude:</span> {earthquake.properties.mag}</p>
+                <p><span className="font-semibold">Time:</span> {format(new Date(earthquake.properties.time), 'yyyy-MM-dd HH:mm:ss')}</p>
+                <p><span className="font-semibold">Depth:</span> {earthquake.geometry.coordinates[2]} km</p>
+              </div>
+              <a 
+                href={earthquake.properties.url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-block mt-2 text-blue-600 hover:text-blue-800 underline text-sm"
+              >
+                More Info
+              </a>
+            </div>
           </Popup>
         </CircleMarker>
       ))}

@@ -66,7 +66,7 @@ function App() {
   }, [minMagnitude, selectedCountry, earthquakes]);
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen overflow-hidden">
       <Sidebar
         minMagnitude={minMagnitude}
         setMinMagnitude={setMinMagnitude}
@@ -76,17 +76,36 @@ function App() {
         isOpen={isSidebarOpen}
         setIsOpen={setIsSidebarOpen}
       />
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-w-0">
         <button
-          className="md:hidden p-2 bg-gray-200"
+          className="md:hidden fixed top-4 left-4 z-30 bg-blue-600 text-white px-4 py-2 rounded-md shadow-lg text-sm font-medium hover:bg-blue-700 transition-colors"
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          aria-label="Toggle filters"
         >
-          {isSidebarOpen ? 'Close' : 'Open'} Filters
+          {isSidebarOpen ? '✕ Close' : '☰ Filters'}
         </button>
-        <div className="flex-1">
-          {loading && <p>Loading...</p>}
-          {error && <p>Error: {error.message}</p>}
-          {!loading && !error && <Map earthquakes={filteredEarthquakes} />}
+        <div className="flex-1 relative w-full h-full">
+          {loading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-white z-10">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                <p className="text-gray-600">Loading earthquakes...</p>
+              </div>
+            </div>
+          )}
+          {error && (
+            <div className="absolute inset-0 flex items-center justify-center bg-white z-10 p-4">
+              <div className="text-center max-w-md">
+                <p className="text-red-600 font-semibold mb-2">Error loading data</p>
+                <p className="text-gray-600 text-sm">{error.message}</p>
+              </div>
+            </div>
+          )}
+          {!loading && !error && (
+            <div className="w-full h-full">
+              <Map earthquakes={filteredEarthquakes} />
+            </div>
+          )}
         </div>
       </div>
     </div>
