@@ -68,3 +68,126 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+npm start
+
+<!-- REPLACE WITH PROJECT-SPECIFIC README BELOW -->
+
+# Earthquake Visualizer
+
+A React app that visualizes recent earthquakes on an interactive map using OpenStreetMap tiles via React‑Leaflet. Filter by minimum magnitude, search by place name, and inspect quake details via popups.
+
+## Features
+- Recent earthquakes from USGS GeoJSON feed
+- Interactive map with scalable circle markers by magnitude
+- Filter by minimum magnitude
+- Search by location name
+- Responsive layout with collapsible sidebar (mobile friendly)
+
+## Tech Stack
+- React (CRA, React 19 runtime)
+- React‑Leaflet + Leaflet
+- Tailwind CSS v4
+- PostCSS with `@tailwindcss/postcss` and `autoprefixer`
+- date‑fns
+
+## Prerequisites
+- Node.js 18+ (recommended LTS)
+- npm 9+
+
+## Quick Start
+```bash
+# install dependencies
+npm install --no-audit --no-fund
+
+# start the dev server (default port 3000)
+npm start
+```
+
+If port 3000 is in use, either stop the other process or run on another port:
+
+- PowerShell (Windows):
+```powershell
+$Env:PORT = "3001"; npm start
+```
+- bash:
+```bash
+PORT=3001 npm start
+```
+
+Build for production:
+```bash
+npm run build
+```
+The optimized assets will be in `build/`.
+
+## Project Structure
+```
+public/
+src/
+  components/
+    Map.js
+    Sidebar.js
+  App.js
+  App.css
+  index.css
+  index.js
+postcss.config.js
+tailwind.config.js
+```
+
+## Tailwind CSS v4 setup
+This project uses Tailwind v4’s new single‑import CSS entry.
+
+- `src/index.css` contains:
+```css
+@import "tailwindcss";
+/* app styles below */
+```
+
+- `postcss.config.js` enables Tailwind only for app CSS (not third‑party CSS) and always runs `autoprefixer`:
+```js
+module.exports = (ctx) => {
+  const isNodeModule = ctx && ctx.file && ctx.file.dirname && ctx.file.dirname.includes("node_modules");
+  return {
+    plugins: [
+      !isNodeModule && require("@tailwindcss/postcss"),
+      require("autoprefixer"),
+    ].filter(Boolean),
+  };
+};
+```
+
+- `tailwind.config.js` scans `src/**/*.{js,jsx,ts,tsx}`.
+
+## Map and Leaflet notes
+- `src/components/Map.js` imports `leaflet/dist/leaflet.css` and configures the default marker icons so they render correctly in bundlers.
+- The map uses `CircleMarker` sized and colored by magnitude; popups display place, magnitude, time, depth, and a link to USGS.
+
+## Usage
+- Open the app; the sidebar lets you:
+  - Set minimum magnitude
+  - Search by place keyword
+- Click a marker to open its popup and view details.
+
+## Troubleshooting
+- Tailwind/PostCSS error: “using tailwindcss directly as a PostCSS plugin”
+  - Ensure `@tailwindcss/postcss` is installed (this project already depends on it) and `postcss.config.js` uses it as above.
+  - Ensure `src/index.css` uses `@import "tailwindcss";` (v4 style), not `@tailwind base;`, etc.
+- Leaflet CSS build error inside `node_modules`
+  - This project disables Tailwind for `node_modules` CSS to avoid processing third‑party styles.
+- Port 3000 already in use
+  - Set the `PORT` environment variable as shown in Quick Start.
+- Console output in certain environments
+  - Prefer avoiding `console.log` in production‑like environments where non‑structured stdio may interfere with tooling.
+
+## Deployment
+- Static hosts (Netlify, Vercel, GitHub Pages): build with `npm run build` and deploy the `build/` folder.
+- Behind a subpath: CRA handles static asset paths; if you deploy under a subpath, configure the `homepage` field in `package.json` accordingly.
+
+## Scripts
+- `npm start` — Start dev server
+- `npm run build` — Create production build
+- `npm test` — Run tests
+
+## License
+Add your preferred license here.
